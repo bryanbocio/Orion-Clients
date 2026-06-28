@@ -32,4 +32,32 @@ public class Address {
     protected Address() {
      
     }
+
+     public Address(UUID id, Client client, String street, String city, String country) {
+        this.id = id;
+        this.client = client;
+        this.street = street;
+        this.city = city;
+        this.country = country;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
 }
