@@ -41,7 +41,7 @@ public class ClientEventListener {
     public void on(IClientEvent event) {
         log.info("Read-model recibe evento: {}", event.getClass().getSimpleName());
         switch (event) {
-             case ClientCreated e -> onClientCreated(e);
+            case ClientCreated e -> onClientCreated(e);
             case ClientUpdated e -> onClientUpdated(e);
             case ClientDeleted e -> onClientDeleted(e);
             case AddressAdded e -> onAddressAdded(e);
