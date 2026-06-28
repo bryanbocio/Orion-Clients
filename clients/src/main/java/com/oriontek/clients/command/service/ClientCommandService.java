@@ -2,15 +2,20 @@ package com.oriontek.clients.command.service;
 
 import java.util.UUID;
 
+
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oriontek.clients.command.domain.Address;
 import com.oriontek.clients.command.domain.Client;
 import com.oriontek.clients.command.dto.AddAddressRequest;
 import com.oriontek.clients.command.repository.IAddressRepository;
 import com.oriontek.clients.command.repository.IClientRepository;
+import com.oriontek.clients.outbox.OutboxEvent;
 import com.oriontek.clients.outbox.OutboxRepository;
+import com.oriontek.clients.shared.event.EventType;
+import com.oriontek.clients.shared.event.IClientEvent;
 import com.oriontek.clients.shared.exceptions.ConflictException;
 import com.oriontek.clients.shared.exceptions.NotFoundException;
 
@@ -19,7 +24,7 @@ import jakarta.transaction.Transactional;
 @Service
 public class ClientCommandService {
     
-     private final IClientRepository clientRepository;
+    private final IClientRepository clientRepository;
     private final IAddressRepository addressRepository;
     private final OutboxRepository outboxRepository;
     private final ObjectMapper objectMapper;
@@ -87,6 +92,13 @@ public class ClientCommandService {
         addressRepository.delete(address);
     }
 
-    
+     private void appendEvent(IClientEvent event) {
+        try {
+            String payload = objectMapper.writeValueAsString(event);
+            outboxRepository.save(new OutboxEvent(event.clientId(), EventType.of(event), payload));
+        } catch (JsonProcessingException ex) {
+            throw new IllegalStateException("No se pudo serializar el evento " + event, ex);
+        }
+    }
 
 }
