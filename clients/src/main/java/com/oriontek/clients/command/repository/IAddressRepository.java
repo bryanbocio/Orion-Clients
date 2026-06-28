@@ -8,4 +8,6 @@ import com.oriontek.clients.command.domain.Address;
 
 public interface IAddressRepository extends JpaRepository<Address, UUID> {
     
+        boolean existsByClientIdAndStreetAndCity(UUID clientId, String street, String city);
+
 }
