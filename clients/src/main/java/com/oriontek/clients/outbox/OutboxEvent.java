@@ -3,7 +3,7 @@ package com.oriontek.clients.outbox;
 import java.time.Instant;
 import java.util.UUID;
 
-import javax.swing.event.DocumentEvent.EventType;
+import com.oriontek.clients.shared.event.EventType;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
