@@ -4,11 +4,13 @@ import java.util.UUID;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oriontek.clients.command.domain.Address;
 import com.oriontek.clients.command.domain.Client;
+import com.oriontek.clients.command.dto.AddAddressRequest;
 import com.oriontek.clients.command.repository.IAddressRepository;
 import com.oriontek.clients.command.repository.IClientRepository;
 import com.oriontek.clients.outbox.OutboxRepository;
-import com.oriontek.clients.shared.event.ClientDeleted;
+import com.oriontek.clients.shared.exceptions.ConflictException;
 import com.oriontek.clients.shared.exceptions.NotFoundException;
 
 import jakarta.transaction.Transactional;
@@ -53,5 +55,23 @@ public class ClientCommandService {
                 .orElseThrow(() -> new NotFoundException("Client was not found: " + id));
         clientRepository.delete(client);
     }
+
+
+      @Transactional
+    public Address addAddress(UUID clientId, AddAddressRequest request) {
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new NotFoundException("Client was not found: " + clientId));
+
+        if (addressRepository.existsByClientIdAndStreetAndCity(clientId, request.street(), request.city())) {
+            throw new ConflictException("The address already exists for this client");
+        }
+
+        Address address = new Address(
+                UUID.randomUUID(), client, request.street(), request.city(), request.country());
+        addressRepository.save(address);
+        return address;
+    }
+
+    
 
 }
