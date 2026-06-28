@@ -2,6 +2,7 @@ package com.oriontek.clients.command.service;
 
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oriontek.clients.command.domain.Address;
@@ -16,6 +17,7 @@ import com.oriontek.clients.shared.exceptions.NotFoundException;
 
 import jakarta.transaction.Transactional;
 
+@Service
 public class ClientCommandService {
     
      private final IClientRepository clientRepository;
