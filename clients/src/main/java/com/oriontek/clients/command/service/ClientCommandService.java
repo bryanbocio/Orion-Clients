@@ -2,11 +2,13 @@ package com.oriontek.clients.command.service;
 
 import java.util.UUID;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oriontek.clients.command.domain.Client;
 import com.oriontek.clients.command.repository.IAddressRepository;
 import com.oriontek.clients.command.repository.IClientRepository;
 import com.oriontek.clients.outbox.OutboxRepository;
+import com.oriontek.clients.shared.exceptions.NotFoundException;
 
 import jakarta.transaction.Transactional;
 
@@ -29,6 +31,16 @@ public class ClientCommandService {
     @Transactional
     public Client createClient(String name) {
         Client client = new Client(UUID.randomUUID(), name);
+        clientRepository.save(client);
+        return client;
+    }
+
+
+     @Transactional
+    public Client updateClient(UUID id, String name) {
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Client was not found: " + id));
+        client.rename(name);
         clientRepository.save(client);
         return client;
     }
