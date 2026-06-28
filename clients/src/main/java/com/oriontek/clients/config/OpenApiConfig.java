@@ -10,7 +10,7 @@ import io.swagger.v3.oas.models.info.License;
 
 @Configuration
 public class OpenApiConfig {
-      @Bean
+    @Bean
     public OpenAPI orionTekOpenApi() {
         return new OpenAPI().info(new Info()
                 .title("OrionTek Clients API")
