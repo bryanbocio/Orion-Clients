@@ -14,6 +14,11 @@ import com.oriontek.clients.command.repository.IAddressRepository;
 import com.oriontek.clients.command.repository.IClientRepository;
 import com.oriontek.clients.outbox.OutboxEvent;
 import com.oriontek.clients.outbox.OutboxRepository;
+import com.oriontek.clients.shared.event.AddressAdded;
+import com.oriontek.clients.shared.event.AddressRemoved;
+import com.oriontek.clients.shared.event.ClientCreated;
+import com.oriontek.clients.shared.event.ClientDeleted;
+import com.oriontek.clients.shared.event.ClientUpdated;
 import com.oriontek.clients.shared.event.EventType;
 import com.oriontek.clients.shared.event.IClientEvent;
 import com.oriontek.clients.shared.exceptions.ConflictException;
@@ -42,6 +47,7 @@ public class ClientCommandService {
     public Client createClient(String name) {
         Client client = new Client(UUID.randomUUID(), name);
         clientRepository.save(client);
+        appendEvent(new ClientCreated(client.getId(), client.getName()));
         return client;
     }
 
@@ -52,6 +58,8 @@ public class ClientCommandService {
                 .orElseThrow(() -> new NotFoundException("Client was not found: " + id));
         client.rename(name);
         clientRepository.save(client);
+        appendEvent(new ClientUpdated(client.getId(), client.getName()));
+
         return client;
     }
 
@@ -60,7 +68,8 @@ public class ClientCommandService {
     public void deleteClient(UUID id) {
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Client was not found: " + id));
-        clientRepository.delete(client);
+                clientRepository.delete(client);
+                appendEvent(new ClientDeleted(client.getId()));
     }
 
 
@@ -75,7 +84,11 @@ public class ClientCommandService {
 
         Address address = new Address(
                 UUID.randomUUID(), client, request.street(), request.city(), request.country());
+
+
         addressRepository.save(address);
+         appendEvent(new AddressAdded(
+                clientId, address.getId(), address.getStreet(), address.getCity(), address.getCountry()));
         return address;
     }
 
@@ -90,6 +103,8 @@ public class ClientCommandService {
             throw new NotFoundException("The address does not belong to the client " + clientId);
         }
         addressRepository.delete(address);
+                appendEvent(new AddressRemoved(clientId, addressId));
+
     }
 
      private void appendEvent(IClientEvent event) {
