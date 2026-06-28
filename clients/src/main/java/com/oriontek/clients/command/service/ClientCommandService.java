@@ -97,7 +97,7 @@ public class ClientCommandService {
             String payload = objectMapper.writeValueAsString(event);
             outboxRepository.save(new OutboxEvent(event.clientId(), EventType.of(event), payload));
         } catch (JsonProcessingException ex) {
-            throw new IllegalStateException("No se pudo serializar el evento " + event, ex);
+            throw new IllegalStateException("Can not serialize" + event, ex);
         }
     }
 
