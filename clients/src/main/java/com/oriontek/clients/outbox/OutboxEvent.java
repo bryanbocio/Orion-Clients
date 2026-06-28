@@ -25,7 +25,7 @@ public class OutboxEvent {
     private String aggregateId;
 
 
-      @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 64)
     private EventType type;
 
