@@ -17,5 +17,10 @@ spring:
     properties:
       hibernate:
         format_sql: false
+  flyway:
+    enabled: false
 
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
