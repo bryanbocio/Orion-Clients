@@ -15,13 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.oracle.svm.core.annotate.Delete;
 import com.oriontek.clients.command.dto.ClientResponse;
 import com.oriontek.clients.command.dto.CreateClientRequest;
 import com.oriontek.clients.command.dto.UpdatedClientRequest;
 import com.oriontek.clients.command.service.ClientCommandService;
 
-import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController 

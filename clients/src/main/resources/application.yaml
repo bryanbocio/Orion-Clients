@@ -21,6 +21,13 @@ spring:
     enabled: false
 
 
+read:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/readdb
+    username: oriontek
+    password: oriontek
+    driver-class-name: org.postgresql.Driver
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

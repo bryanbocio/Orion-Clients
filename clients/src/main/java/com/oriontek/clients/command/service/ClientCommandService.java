@@ -11,7 +11,6 @@ import com.oriontek.clients.command.dto.AddAddressRequest;
 import com.oriontek.clients.command.repository.IAddressRepository;
 import com.oriontek.clients.command.repository.IClientRepository;
 import com.oriontek.clients.outbox.OutboxRepository;
-import com.oriontek.clients.shared.event.AddressRemoved;
 import com.oriontek.clients.shared.exceptions.ConflictException;
 import com.oriontek.clients.shared.exceptions.NotFoundException;
 
