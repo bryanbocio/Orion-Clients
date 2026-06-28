@@ -8,6 +8,7 @@ import com.oriontek.clients.command.domain.Client;
 import com.oriontek.clients.command.repository.IAddressRepository;
 import com.oriontek.clients.command.repository.IClientRepository;
 import com.oriontek.clients.outbox.OutboxRepository;
+import com.oriontek.clients.shared.event.ClientDeleted;
 import com.oriontek.clients.shared.exceptions.NotFoundException;
 
 import jakarta.transaction.Transactional;
@@ -44,4 +45,13 @@ public class ClientCommandService {
         clientRepository.save(client);
         return client;
     }
+
+
+      @Transactional
+    public void deleteClient(UUID id) {
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Client was not found: " + id));
+        clientRepository.delete(client);
+    }
+
 }
