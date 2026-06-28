@@ -1,5 +1,7 @@
 package com.oriontek.clients.shared.event;
 
-public interface IClientEvent {
-    
+import java.util.UUID;
+
+public  interface IClientEvent {
+     UUID clientId();
 }
