@@ -10,6 +10,7 @@ import com.oriontek.clients.command.dto.AddAddressRequest;
 import com.oriontek.clients.command.repository.IAddressRepository;
 import com.oriontek.clients.command.repository.IClientRepository;
 import com.oriontek.clients.outbox.OutboxRepository;
+import com.oriontek.clients.shared.event.AddressRemoved;
 import com.oriontek.clients.shared.exceptions.ConflictException;
 import com.oriontek.clients.shared.exceptions.NotFoundException;
 
@@ -70,6 +71,19 @@ public class ClientCommandService {
                 UUID.randomUUID(), client, request.street(), request.city(), request.country());
         addressRepository.save(address);
         return address;
+    }
+
+    @Transactional
+    public void removeAddress(UUID clientId, UUID addressId) {
+        if (!clientRepository.existsById(clientId)) {
+            throw new NotFoundException("Cliente no encontrado: " + clientId);
+        }
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new NotFoundException("Dirección no encontrada: " + addressId));
+        if (!address.getClient().getId().equals(clientId)) {
+            throw new NotFoundException("La dirección no pertenece al cliente " + clientId);
+        }
+        addressRepository.delete(address);
     }
 
     
