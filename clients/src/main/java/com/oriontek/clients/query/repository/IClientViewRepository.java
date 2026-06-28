@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.oriontek.clients.query.domain.ClientView;
 
-public interface ClientViewRepository extends JpaRepository<ClientView, UUID>{
+public interface IClientViewRepository extends JpaRepository<ClientView, UUID>{
     
 }
