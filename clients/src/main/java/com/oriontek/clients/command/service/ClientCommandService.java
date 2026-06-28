@@ -76,12 +76,12 @@ public class ClientCommandService {
     @Transactional
     public void removeAddress(UUID clientId, UUID addressId) {
         if (!clientRepository.existsById(clientId)) {
-            throw new NotFoundException("Cliente no encontrado: " + clientId);
+            throw new NotFoundException("Client was not found: " + clientId);
         }
         Address address = addressRepository.findById(addressId)
-                .orElseThrow(() -> new NotFoundException("Dirección no encontrada: " + addressId));
+                .orElseThrow(() -> new NotFoundException("Address was not found: " + addressId));
         if (!address.getClient().getId().equals(clientId)) {
-            throw new NotFoundException("La dirección no pertenece al cliente " + clientId);
+            throw new NotFoundException("The address does not belong to the client " + clientId);
         }
         addressRepository.delete(address);
     }
