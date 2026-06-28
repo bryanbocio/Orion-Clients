@@ -29,7 +29,32 @@ public class Client {
     private List<Address> addresses = new ArrayList<>();
 
     protected Client() {
-       
+    }
+
+     public Client(UUID id, String name) {
+        this.id = id;
+        this.name = name;
+        this.createdAt = Instant.now();
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void rename(String name) {
+        this.name = name;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
     }
     
 }
