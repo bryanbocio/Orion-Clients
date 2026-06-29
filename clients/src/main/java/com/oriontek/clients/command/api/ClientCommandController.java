@@ -1,4 +1,4 @@
-package com.oriontek.clients.api;
+package com.oriontek.clients.command.api;
 
 import java.net.URI;
 import java.util.UUID;
