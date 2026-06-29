@@ -1,0 +1,65 @@
+services:
+  write-db:
+    image: postgres:16-alpine
+    container_name: oriontek-write-db
+    environment:
+      POSTGRES_DB: writedb
+      POSTGRES_USER: oriontek
+      POSTGRES_PASSWORD: oriontek
+    ports:
+      - "5432:5432"
+    volumes:
+      - write-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U oriontek -d writedb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  read-db:
+    image: postgres:16-alpine
+    container_name: oriontek-read-db
+    environment:
+      POSTGRES_DB: readdb
+      POSTGRES_USER: oriontek
+      POSTGRES_PASSWORD: oriontek
+    ports:
+      - "5433:5432"
+    volumes:
+      - read-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U oriontek -d readdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  kafka:
+    image: confluentinc/cp-kafka:7.7.1
+    container_name: oriontek-kafka
+    ports:
+      - "9094:9094"
+    environment:
+      # --- KRaft mode (sin Zookeeper) ---
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:29093
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9094,CONTROLLER://0.0.0.0:29093,INTERNAL://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9094,INTERNAL://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      CLUSTER_ID: oriontek-kraft-cluster-001
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9094"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  write-data:
+  read-data:
